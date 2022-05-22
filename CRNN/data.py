@@ -55,6 +55,8 @@ class DataGenerator:
             Y_train[i, 0:len(seq)] = seq
             T_train[i] = len(seq)
 
+        print(X_train.shape, Y_train.shape, L_train.shape, T_train.shape)
+
         return [X_train, Y_train, L_train, T_train], np.zeros((X_train.shape[0], 1), dtype='float16')
 
 
