@@ -1,7 +1,6 @@
 import utils as U
 from config import Config
 import numpy as np
-import cv2
 
 class ModelEvaluator:
 
@@ -19,7 +18,7 @@ class ModelEvaluator:
             #sample_image = cv2.cvtColor(sample_image, cv2.COLOR_BGR2GRAY)
             sample_image = U.normalize(sample_image)
             sample_image = U.resize(sample_image, Config.img_height)
-            #sample_image = np.expand_dims(np.array(sample_image), -1)
+            sample_image = np.expand_dims(np.array(sample_image), -1)
 
             batch_sample = np.zeros(
                 shape=[1,Config.img_height, sample_image.shape[1], Config.num_channels],
