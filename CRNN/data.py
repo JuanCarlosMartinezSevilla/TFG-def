@@ -36,7 +36,6 @@ class DataGenerator:
             X_batch.append(sample_image)
             Y_batch.append([self.w2i[symbol] for symbol in U.krn_tokenizer(self.Y[self.idx])])
             self.idx = (self.idx + 1) % len(self.X)
-        print(Y_batch)
 
         X_train = np.zeros(
             shape=[self.batch_size, Config.img_height, max_image_width, self.num_channels],

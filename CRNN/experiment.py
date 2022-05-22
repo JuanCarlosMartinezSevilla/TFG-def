@@ -9,7 +9,7 @@ import argparse
 def main(args):
     dg = DataGenerator(dataset_list_path=args.train,
                        batch_size=Config.batch_size,
-                       num_channels=Config.channels,
+                       num_channels=Config.num_channels,
                        width_reduction=Config.width_reduction)
 
     model_tr, model_pr = build_model(vocabulary_size=len(dg.w2i))
@@ -23,7 +23,7 @@ def main(args):
     
     best_ser_val = 100
 
-    for super_epoch in range(1000):
+    for super_epoch in range(Config.epochs):
         print("Epoch {}".format(super_epoch))
         model_tr.fit(dg,
                      steps_per_epoch=len(dg.X)//Config.batch_size,
