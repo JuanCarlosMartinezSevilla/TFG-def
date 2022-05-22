@@ -30,7 +30,7 @@ class DataGenerator:
             #print("Size in batch: ", sample_image.shape)
             max_image_width = max(max_image_width, sample_image.shape[1])
             
-            #sample_image = np.expand_dims(np.array(sample_image), -1)
+            sample_image = np.expand_dims(np.array(sample_image), -1)
             #print(sample_image.shape)
             X_batch.append(sample_image)
             Y_batch.append([self.w2i[symbol] for symbol in U.krn_tokenizer(self.Y[self.idx])])
