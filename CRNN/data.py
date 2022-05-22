@@ -25,7 +25,7 @@ class DataGenerator:
 
             # aug factor == 0 means no augmentation at all
             sample_image = U.calculate_STFT_array_from_src(self.X[self.idx])
-            sample_image = cv2.cvtColor(sample_image, cv2.COLOR_BGR2GRAY)
+            #sample_image = cv2.cvtColor(sample_image, cv2.COLOR_BGR2GRAY)
             sample_image = U.normalize(sample_image)
             #sample_image = U.resize(sample_image, Config.img_height)
             #print("Size in batch: ", sample_image.shape)

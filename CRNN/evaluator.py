@@ -16,7 +16,7 @@ class ModelEvaluator:
         for idx in range(len(self.X)):
 
             sample_image = U.calculate_STFT_array_from_src(self.X[self.idx])
-            sample_image = cv2.cvtColor(sample_image, cv2.COLOR_BGR2GRAY)
+            #sample_image = cv2.cvtColor(sample_image, cv2.COLOR_BGR2GRAY)
             sample_image = U.normalize(sample_image)
             #sample_image = U.resize(sample_image, Config.img_height)
             sample_image = np.expand_dims(np.array(sample_image), -1)
