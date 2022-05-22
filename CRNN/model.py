@@ -2,6 +2,7 @@ from keras.layers import Dense, LSTM, Reshape, Permute, BatchNormalization, Inpu
 from keras.models import Model
 import keras.backend as K
 from config import Config
+from keras.layers import LeakyReLU
 
 
 def ctc_lambda_func(args):
@@ -9,10 +10,9 @@ def ctc_lambda_func(args):
 
     return K.ctc_batch_cost(krn_files, y_pred, spec_length, krn_length)
 
-
 def build_model(vocabulary_size):
     # input with shape of height and width 
-    inputs = Input(shape=(Config.img_height, None, 1), dtype="float32", name="Audio")
+    inputs = Input(shape=(Config.img_height, None, Config.num_channels), dtype="float32", name="Audio")
     x = inputs
 
     conv_filters = Config.filters
@@ -24,7 +24,7 @@ def build_model(vocabulary_size):
     lstm_units = [256, 256]
 
     for idx, f in enumerate(conv_filters):
-        x = Conv2D(f, conv_k_size, padding='same',
+        x = Conv2D(f, conv_k_size, activation = 'LeakyReLU', padding='same',
         name = f'Conv{idx+1}' )(x)    
         x = BatchNormalization(name=f'BatchNorm{idx+1}')(x)
         x = MaxPool2D(pool_size=pool_k_size[idx], strides=pool_strides[idx], padding='same',
