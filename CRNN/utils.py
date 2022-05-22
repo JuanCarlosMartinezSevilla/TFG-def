@@ -6,6 +6,7 @@ import json
 import os
 import joblib
 import librosa
+from tqdm import tqdm
 
 def resize(image, height):
     # Normalizing images
@@ -44,7 +45,7 @@ def levenshtein(a,b):
     return current[n]
 
 
-memory = joblib.memory.Memory('./dataset', mmap_mode='r', verbose=1)
+memory = joblib.memory.Memory('./dataset', mmap_mode='r', verbose=0)
 @memory.cache
 def calculate_STFT_array_from_src (file_path: str) -> np.array:
     n_fft = 512
@@ -59,7 +60,7 @@ def calculate_STFT_array_from_src (file_path: str) -> np.array:
     log_stft = np.flipud(log_stft)
     return log_stft
 
-memory = joblib.memory.Memory('./dataset', mmap_mode='r', verbose=1)
+memory = joblib.memory.Memory('./dataset', mmap_mode='r', verbose=0)
 @memory.cache
 def krn_tokenizer(f_path):
 
@@ -92,7 +93,7 @@ def parse_lst(lst_path):
     vocabulary = set()
 
     lines = open(lst_path, 'r').read().splitlines()
-    for line in lines:
+    for line in tqdm(lines):
         line_aud = line + '.wav'
         line_kern = line + '.skm'
         audio = os.path.join(Config.path_to_audios, line_aud)

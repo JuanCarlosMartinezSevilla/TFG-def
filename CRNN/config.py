@@ -2,7 +2,7 @@
 class Config:
     img_height = 257
     num_channels = 1
-    width_reduction = 8
+    width_reduction = 4
     epochs = 100
     batch_size = 8
     channels = 1
