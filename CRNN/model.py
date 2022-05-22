@@ -8,8 +8,8 @@ def ctc_lambda_func(args):
     return tf.keras.backend.ctc_batch_cost(labels, y_pred, input_length, label_length)
 
 
-def build_model(vocabulary_size):
-    input = tf.keras.layers.Input(shape=(Config.img_height, None, 1))
+def get_model(vocabulary_size):
+    input = tf.keras.layers.Input(shape=(Config.img_height, None, 3))
     conv_filters = Config.filters
     inner = input
     for f in conv_filters:
@@ -29,7 +29,7 @@ def build_model(vocabulary_size):
     y_pred = tf.keras.layers.Activation('softmax', name='softmax')(inner)
 
     model_pr = tf.keras.Model(inputs=input, outputs=y_pred)
-    model_pr.summary()
+    #model_pr.summary()
 
     labels = tf.keras.layers.Input(name='the_labels', shape=[None], dtype='float32')
     input_length = tf.keras.layers.Input(name='input_length', shape=[1], dtype='int64')

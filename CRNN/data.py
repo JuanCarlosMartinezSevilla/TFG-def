@@ -25,16 +25,18 @@ class DataGenerator:
 
             # aug factor == 0 means no augmentation at all
             sample_image = U.calculate_STFT_array_from_src(self.X[self.idx])
+            sample_image = cv2.cvtColor(sample_image, cv2.COLOR_BGR2GRAY)
             sample_image = U.normalize(sample_image)
-            sample_image = U.resize(sample_image, Config.img_height)
+            #sample_image = U.resize(sample_image, Config.img_height)
             #print("Size in batch: ", sample_image.shape)
             max_image_width = max(max_image_width, sample_image.shape[1])
             
             sample_image = np.expand_dims(np.array(sample_image), -1)
-            print(sample_image.shape)
+            #print(sample_image.shape)
             X_batch.append(sample_image)
             Y_batch.append([self.w2i[symbol] for symbol in U.krn_tokenizer(self.Y[self.idx])])
             self.idx = (self.idx + 1) % len(self.X)
+        print(Y_batch)
 
         X_train = np.zeros(
             shape=[self.batch_size, Config.img_height, max_image_width, self.num_channels],
