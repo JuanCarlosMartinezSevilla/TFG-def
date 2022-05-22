@@ -8,7 +8,7 @@ def ctc_lambda_func(args):
     return tf.keras.backend.ctc_batch_cost(labels, y_pred, input_length, label_length)
 
 
-def get_model(vocabulary_size):
+def build_model(vocabulary_size):
     input = tf.keras.layers.Input(shape=(Config.img_height, None, 3))
     conv_filters = Config.filters
     inner = input
