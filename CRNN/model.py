@@ -9,7 +9,7 @@ def ctc_lambda_func(args):
 
 
 def build_model(vocabulary_size):
-    input = tf.keras.layers.Input(shape=(Config.spec_height, None, 1))
+    input = tf.keras.layers.Input(shape=(Config.img_height, None, 1))
     conv_filters = Config.filters
     inner = input
     for f in conv_filters:
@@ -20,7 +20,7 @@ def build_model(vocabulary_size):
 
     inner = tf.keras.layers.Permute((2, 1, 3))(inner)
     inner = tf.keras.layers.Reshape(
-        target_shape=(-1, (Config.spec_height // (2 ** len(conv_filters))) * conv_filters[-1]),
+        target_shape=(-1, (Config.img_height // (2 ** len(conv_filters))) * conv_filters[-1]),
         name='reshape')(inner)
 
     inner = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(64, return_sequences=True, dropout=0.25))(inner)

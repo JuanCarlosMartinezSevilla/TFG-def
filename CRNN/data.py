@@ -1,6 +1,7 @@
 import numpy as np
 from config import Config
 import utils as U
+import cv2
 
 
 class DataGenerator:
@@ -26,9 +27,11 @@ class DataGenerator:
             sample_image = U.calculate_STFT_array_from_src(self.X[self.idx])
             sample_image = U.normalize(sample_image)
             sample_image = U.resize(sample_image, Config.img_height)
-            print("Size in batch: ", sample_image.shape)
+            #print("Size in batch: ", sample_image.shape)
             max_image_width = max(max_image_width, sample_image.shape[1])
-
+            
+            sample_image = np.expand_dims(np.array(sample_image), -1)
+            print(sample_image.shape)
             X_batch.append(sample_image)
             Y_batch.append([self.w2i[symbol] for symbol in U.krn_tokenizer(self.Y[self.idx])])
             self.idx = (self.idx + 1) % len(self.X)

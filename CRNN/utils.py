@@ -93,14 +93,15 @@ def parse_lst(lst_path):
 
     lines = open(lst_path, 'r').read().splitlines()
     for line in lines:
-        
-        audio = os.path.join(Config.path_to_audios, line)
-        kern = os.path.join(Config.path_to_kern, line)
+        line_aud = line + '.wav'
+        line_kern = line + '.skm'
+        audio = os.path.join(Config.path_to_audios, line_aud)
+        kern = os.path.join(Config.path_to_kern, line_kern)
 
         spectrogram = calculate_STFT_array_from_src(audio)
         tokens = krn_tokenizer(kern)
 
-        print('Forma:' ,spectrogram.shape)
+        #print('Forma:' ,spectrogram.shape)
 
         for t in tokens:
             vocabulary.add(t)

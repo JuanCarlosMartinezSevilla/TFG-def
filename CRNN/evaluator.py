@@ -4,9 +4,9 @@ import numpy as np
 
 class ModelEvaluator:
 
-    def __init__(self, set, aug_factor):
+    def __init__(self, set):
         self.X, self.Y = set
-        self.aug_factor = aug_factor
+        #self.aug_factor = aug_factor
 
     def eval(self, model, i2w):
         acc_ed = 0
@@ -28,9 +28,9 @@ class ModelEvaluator:
                 batch_sample[0] = sample_image
                 prediction = model.predict(batch_sample)[0]
 
-            else:
+            #else:
                 # Aumentar, comprobar y elegir
-                raise NotImplementedError
+                #raise NotImplementedError
 
             h = U.greedy_decoding(prediction, i2w)
 

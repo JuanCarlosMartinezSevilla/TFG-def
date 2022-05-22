@@ -15,18 +15,18 @@ def main(args):
     model_tr, model_pr = build_model(vocabulary_size=len(dg.w2i))
 
     X_val, Y_val, _, _ = U.parse_lst(args.validation)
-    evaluator_val = ModelEvaluator([X_val, Y_val], aug_factor=args.aug_test)
+    evaluator_val = ModelEvaluator([X_val, Y_val])
 
     X_test, Y_test, _, _ = U.parse_lst(args.test)
-    evaluator_test = ModelEvaluator([X_test, Y_test], aug_factor=args.aug_test)
+    evaluator_test = ModelEvaluator([X_test, Y_test])
 
-    if args.model:
-        best_ser_val = 100
+    
+    best_ser_val = 100
 
     for super_epoch in range(1000):
         print("Epoch {}".format(super_epoch))
         model_tr.fit(dg,
-                     steps_per_epoch=100,
+                     steps_per_epoch=len(dg.X)//Config.batch_size,
                      epochs=1,
                      verbose=0)
 
