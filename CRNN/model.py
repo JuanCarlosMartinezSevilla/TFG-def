@@ -1,11 +1,7 @@
-from unicodedata import name
 from keras.layers import Dense, LSTM, Reshape, Permute, BatchNormalization, Input, Conv2D, MaxPool2D, Lambda, Bidirectional
 from keras.models import Model
 import keras.backend as K
 from config import Config
-from dataGen import DataGen
-import sys
-from keras.layers import LeakyReLU
 
 
 def ctc_lambda_func(args):
@@ -27,7 +23,7 @@ def build_model(alphabet_len):
     lstm_units = [256, 256]
 
     for idx, f in enumerate(conv_filters):
-        x = Conv2D(f, conv_k_size, activation = 'LeakyReLU', padding='same',
+        x = Conv2D(f, conv_k_size, padding='same',
         name = f'Conv{idx+1}' )(x)    
         x = BatchNormalization(name=f'BatchNorm{idx+1}')(x)
         x = MaxPool2D(pool_size=pool_k_size[idx], strides=pool_strides[idx], padding='same',
