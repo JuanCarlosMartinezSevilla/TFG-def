@@ -21,6 +21,7 @@ class DataGenerator:
 
         max_image_width = 0
         for _ in range(self.batch_size):
+            print ("hola aquí estoy")
 
             # aug factor == 0 means no augmentation at all
             sample_image = U.calculate_STFT_array_from_src(self.X[self.idx])
