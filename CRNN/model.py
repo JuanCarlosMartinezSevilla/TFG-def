@@ -15,6 +15,8 @@ def build_model(vocabulary_size):
     inputs = Input(shape=(Config.img_height, None, Config.num_channels), dtype="float32", name="Audio")
     x = inputs
 
+    print(x.shape)
+
     conv_filters = Config.filters
     pool_k_size = Config.pool_size
     conv_k_size = Config.kernel_size
