@@ -9,7 +9,8 @@ def ctc_lambda_func(args):
 
     return K.ctc_batch_cost(krn_files, y_pred, spec_length, krn_length)
 
-def build_model(alphabet_len):
+
+def build_model(vocabulary_size):
     # input with shape of height and width 
     inputs = Input(shape=(Config.img_height, None, 1), dtype="float32", name="Audio")
     x = inputs
@@ -38,7 +39,7 @@ def build_model(alphabet_len):
     for units in lstm_units:
         x = Bidirectional(LSTM(units, return_sequences=True, dropout = 0.2))(x)
 
-    outputs = Dense(alphabet_len+1, activation = 'softmax')(x)
+    outputs = Dense(vocabulary_size+1, activation = 'softmax')(x)
 
     model_val = Model(inputs=inputs, outputs=outputs)
 
