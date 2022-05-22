@@ -1,4 +1,4 @@
-from CRNN.config import Config
+from config import Config
 from data import DataGenerator
 from model import build_model
 from evaluator import ModelEvaluator

@@ -1,6 +1,6 @@
 import numpy as np
 import itertools
-from CRNN.config import Config
+from config import Config
 import cv2
 import json
 import os
