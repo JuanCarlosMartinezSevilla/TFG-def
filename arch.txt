@@ -1,0 +1,94 @@
+# ARQUITECTURA DE JOSE
+architecture:
+  #Convolutional stages:
+  filters : [16, 16]
+  kernel_size : [[3,3], [3,3]]
+  pool_size : [[3,3], [3,3]]
+  pool_strides : [[1, 1], [1, 1]]
+  activations : ['LeakyReLU', 'LeakyReLU']
+  param_activation : [0.2, 0.2]
+  batch_norm : [True, True]
+  #Recurrent stages:
+  units : [256, 256]
+  batch_norm_rec : [True, True]
+  dropout : [0, 0]
+
+# PARTE DE LA CONVOLUCIÓN
+        for conv_index in range(len(architecture['filters'])):
+                x = layers.Conv2D(
+                        filters = architecture['filters'][conv_index],
+                        kernel_size = architecture['kernel_size'][conv_index],
+                        # strides = architecture['pool_strides'][conv_index],
+                        padding = 'same',
+                        name = 'Conv' + str(conv_index + 1)
+                )(x)
+                if architecture['batch_norm'][conv_index]:
+                        x = layers.BatchNormalization(
+                                name = 'BatchNorm' + str(conv_index + 1)
+                        )(x)
+                # x = eval('layers.' + architecture['activations'][conv_index] + '(' + \
+                #               'name = ' + "'Activ" + str(conv_index + 1)  + "'" + \
+                #               ', alpha=' + str(architecture['param_activation'][conv_index]) + \
+                #               ')' + '(x)')
+                x = eval('activations.' + architecture['activations'][conv_index] + '(x)')
+                x = layers.MaxPool2D(
+                                pool_size = architecture['pool_size'][conv_index],
+                                strides = architecture['pool_strides'][conv_index],
+                                padding = 'same',
+                                 name = 'MaxPool' + str(conv_index + 1)
+                )(x)
+
+
+
+
+# SUMMARY DE LA RED
+___________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to
+==================================================================================================
+image (InputLayer)              [(None, 229, None, 1 0
+_________________________________________________________________________________________________
+Conv1 (Conv2D)                  (None, 229, None, 16 160         image[0][0]
+_____________________________________
+BatchNorm1 (BatchNormalization) (None, 229, None, 16 64          Conv1[0][0]
+__________________________________________________________________________________________________
+tf_op_layer_Tanh (TensorFlowOpL [(None, 229, None, 1 0           BatchNorm1[0][0]
+__________________________________________________________________________________________________
+MaxPool1 (MaxPooling2D)         (None, 229, None, 16 0           tf_op_layer_Tanh[0][0]
+__________________________________________________________________________________________________
+Conv2 (Conv2D)                  (None, 229, None, 16 2320        MaxPool1[0][0]
+___________________
+BatchNorm2 (BatchNormalization) (None, 229, None, 16 64          Conv2[0][0]
+__________________________________________________________________________________________________
+tf_op_layer_Tanh_1 (TensorFlowO [(None, 229, None, 1 0           BatchNorm2[0][0]
+__________________________________________________________________________________________________
+MaxPool2 (MaxPooling2D)         (None, 229, None, 16 0           tf_op_layer_Tanh_1[0][0]
+__________________________________________________________________________________________________
+permute (Permute)               (None, None, 229, 16 0           MaxPool2[0][0]
+__________________________________________________________________________________________________
+Reshape (Reshape)               (None, None, 3664)   0           permute[0][0]
+____________________
+Bidirectional1 (Bidirectional)  (None, None, 768)    12438528    Reshape[0][0]
+__________________________________________________________________________________________________
+BatchNormRec1 (BatchNormalizati (None, None, 768)    3072        Bidirectional1[0][0]
+__________________________________________________________________________________________________
+Bidirectional2 (Bidirectional)  (None, None, 768)    3542016     BatchNormRec1[0][0]
+__________________________________________________________________________________________________
+BatchNormRec2 (BatchNormalizati (None, None, 768)    3072        Bidirectional2[0][0]
+__________________________________________________________________________________________________
+DenseClassifier (Dense)         (None, None, 1618)   1244242     BatchNormRec2[0][0]
+__________________________________________________________________________________________________
+y_true (InputLayer)             [(None, None)]       0
+__________________________________________________________________________________________________
+input_length (InputLayer)       [(None, 1)]          0
+__________________________________________________________________________________________________
+label_length (InputLayer)       [(None, 1)]          0
+__________________________________________________________________________________________________
+ctc (Lambda)                    (None, 1)            0           DenseClassifier[0][0]
+                                                                 y_true[0][0]
+                                                                 input_length[0][0]
+                                                                 label_length[0][0]
+==================================================================================================
+
+
+
+
