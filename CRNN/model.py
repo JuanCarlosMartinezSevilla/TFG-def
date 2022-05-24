@@ -10,27 +10,47 @@ def ctc_lambda_func(args):
 
 def build_model(vocabulary_size):
     input = tf.keras.layers.Input(shape=(Config.img_height, None, Config.num_channels))
-    conv_filters = Config.filters
-    k = Config.kernel_size
-    p = Config.pool_size
-    s = Config.pool_strides
-    inner = input
-    for f in conv_filters:
-        inner = tf.keras.layers.Conv2D(filters = f, kernel_size = k, padding='same')(inner)
-        inner = tf.keras.layers.BatchNormalization()(inner)
-        inner = tf.keras.layers.LeakyReLU(alpha=0.2)(inner)
-        inner = tf.keras.layers.MaxPooling2D(pool_size=(2,2))(inner)
 
-    inner = tf.keras.layers.Permute((2, 1, 3))(inner)
-    inner = tf.keras.layers.Reshape(
-        target_shape=(-1, (Config.img_height // (2 ** len(conv_filters))) * conv_filters[-1]),
-        name='reshape')(inner)
+    x = input
 
-    inner = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(256, return_sequences=True, dropout=0.25))(inner)
-    inner = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(256, return_sequences=True, dropout=0.25))(inner)
+    ### Convolutional block ###
+    for conv_index in range(len(Config.filters)):
+        x = tf.keras.layers.Conv2D(
+            filters = Config.filters[conv_index],
+            kernel_size = Config.kernel_size[conv_index],
+            padding = 'same',
+            name = 'Conv' + str(conv_index + 1)
+        )(x)
+        if Config.batch_norm[conv_index]:
+                x = tf.keras.layers.BatchNormalization(
+                    name = 'BatchNorm' + str(conv_index + 1)
+                )(x)
+        
+        x = tf.keras.layers.MaxPool2D(
+            pool_size = Config.pool_size[conv_index],
+            strides = Config.pool_strides[conv_index],
+            padding = 'same',
+            name = 'MaxPool' + str(conv_index + 1)
+        )(x)
+    
+    print("Hola")
 
-    inner = tf.keras.layers.Dense(vocabulary_size + 1, name='dense2')(inner)
-    y_pred = tf.keras.layers.Activation('softmax', name='softmax')(inner)
+    x = tf.keras.layers.Permute((2, 1, 3))(x)
+    x = tf.keras.layers.Reshape(
+        target_shape=(-1, (Config.img_height // (2 ** len(Config.pool_size))) * Config.filters[-1]),
+        name='reshape')(x)
+
+    ### Recurrent block ###
+    for rec_index in range(len(Config.units)):
+        x = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(
+            Config.units[rec_index], 
+            return_sequences=True, 
+            dropout=0.25))(x)
+        x = tf.keras.layers.BatchNormalization(
+            name = 'BatchNormRec' + str(rec_index + 1))(x)
+
+
+    y_pred= tf.keras.layers.Dense(vocabulary_size + 1, activation='softmax', name='Dense')(x) 
 
     model_pr = tf.keras.Model(inputs=input, outputs=y_pred)
     #model_pr.summary()

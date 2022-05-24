@@ -1,22 +1,16 @@
 import numpy as np
 import itertools
 from config import Config
-import cv2
-import json
 import os
 import joblib
 import librosa
 from tqdm import tqdm
-
-def resize(image, height):
-    # Normalizing images
-    width = int(float(height * image.shape[1]) / image.shape[0])
-    return cv2.resize(image, (width, height))
+import cv2
+import matplotlib.pyplot as plt
 
 
 def normalize(image):
     return (255. - image) / 255.
-
 
 def greedy_decoding(prediction, i2w):
     out_best = np.argmax(prediction, axis=1)
@@ -58,6 +52,9 @@ def calculate_STFT_array_from_src (file_path: str) -> np.array:
     stft_complex = librosa.stft(y=audio, n_fft=n_fft, hop_length=hop_length)
     log_stft = np.log(np.abs(stft_complex) + eps)
     log_stft = np.flipud(log_stft)
+
+    print(log_stft, log_stft.shape)
+
     return log_stft
 
 memory = joblib.memory.Memory('./dataset', mmap_mode='r', verbose=0)
@@ -84,6 +81,7 @@ def krn_tokenizer(f_path):
             if s in l:
                 l = l.replace(s, '')
         tokens.append(l)
+    print(tokens)
     return tokens
 
 def parse_lst(lst_path):
