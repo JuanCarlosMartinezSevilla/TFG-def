@@ -11,12 +11,15 @@ def ctc_lambda_func(args):
 def build_model(vocabulary_size):
     input = tf.keras.layers.Input(shape=(Config.img_height, None, Config.num_channels))
     conv_filters = Config.filters
+    k = Config.kernel_size
+    p = Config.pool_size
+    s = Config.pool_strides
     inner = input
     for f in conv_filters:
-        inner = tf.keras.layers.Conv2D(f, 3, padding='same')(inner)
+        inner = tf.keras.layers.Conv2D(filters = f, kernel_size = k, padding='same')(inner)
         inner = tf.keras.layers.BatchNormalization()(inner)
         inner = tf.keras.layers.LeakyReLU(alpha=0.2)(inner)
-        inner = tf.keras.layers.MaxPooling2D(pool_size=(2, 2))(inner)
+        inner = tf.keras.layers.MaxPooling2D(pool_size=(2,2))(inner)
 
     inner = tf.keras.layers.Permute((2, 1, 3))(inner)
     inner = tf.keras.layers.Reshape(
@@ -44,6 +47,7 @@ def build_model(vocabulary_size):
                               outputs=loss_out)
 
     model_tr.compile(loss={'ctc': lambda y_true, y_pred: y_pred}, optimizer='adam')
+    model_tr.summary()
 
     return model_tr, model_pr
 

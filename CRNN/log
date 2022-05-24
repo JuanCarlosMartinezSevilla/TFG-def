@@ -1,0 +1,22 @@
+13371 samples loaded with 881-sized vocabulary
+4457 samples loaded with 723-sized vocabulary
+4457 samples loaded with 758-sized vocabulary
+Epoch 0
+hola aquí estoy
+hola aquí estoy
+hola aquí estoy
+hola aquí estoy
+hola aquí estoy
+hola aquí estoy
+hola aquí estoy
+hola aquí estoy
+(8, 257, 1078, 3) (8, 22) (8, 1) (8, 1)
+hola aquí estoy
+hola aquí estoy
+hola aquí estoy
+hola aquí estoy
+hola aquí estoy
+hola aquí estoy
+hola aquí estoy
+hola aquí estoy
+(8, 257, 1466, 3) (8, 31) (8, 1) (8, 1)

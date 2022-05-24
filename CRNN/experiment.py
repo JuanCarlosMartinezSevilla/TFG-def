@@ -22,11 +22,13 @@ def main(args):
 
     
     best_ser_val = 100
+    data = []
 
     for super_epoch in range(Config.epochs):
         print("Epoch {}".format(super_epoch))
         model_tr.fit(dg,
                      steps_per_epoch=len(dg.X)//Config.batch_size,
+                     #steps_per_epoch=100,
                      epochs=1,
                      verbose=0)
 
@@ -39,7 +41,12 @@ def main(args):
             print("\tSER improved from {} to {} --> Saving model.".format(best_ser_val, ser_val))
             best_ser_val = ser_val
             model_pr.save_weights("model_weights.h5")
-
+        data.append([super_epoch, ser_val])
+    print(data)
+    with open('results.txt', 'w') as f:
+        for elem in data:
+            f.write(elem + '\n')
+    print("Final")
 
 def build_argument_parser():
     parser = argparse.ArgumentParser(description=__doc__, add_help=True,

@@ -21,7 +21,7 @@ class DataGenerator:
 
         max_image_width = 0
         for _ in range(self.batch_size):
-            print ("hola aquí estoy")
+          
 
             # aug factor == 0 means no augmentation at all
             sample_image = U.calculate_STFT_array_from_src(self.X[self.idx])
@@ -55,7 +55,7 @@ class DataGenerator:
             Y_train[i, 0:len(seq)] = seq
             T_train[i] = len(seq)
 
-        print(X_train.shape, Y_train.shape, L_train.shape, T_train.shape)
+        #print(X_train.shape, Y_train.shape, L_train.shape, T_train.shape)
 
         return [X_train, Y_train, L_train, T_train], np.zeros((X_train.shape[0], 1), dtype='float16')
 
