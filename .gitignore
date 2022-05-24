@@ -2,3 +2,5 @@
 /CRNN/__pycache__/
 /CRNN/dataset/
 /dataset
+.venv/
+.idea/
