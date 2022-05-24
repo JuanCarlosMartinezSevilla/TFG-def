@@ -5,12 +5,12 @@ class Config:
     width_reduction = 4
     epochs = 200
     batch_size = 8
-    #path_to_audios = '/workspace/CRNN/TFG/Synthesis_procedures/piano'
-    #path_to_kern = '/workspace/CRNN/TFG/GT'
+    path_to_audios = '/workspace/CRNN/TFG/Synthesis_procedures/piano'
+    path_to_kern = '/workspace/CRNN/TFG/GT'
 
     # LOCAL training
-    path_to_audios = '../piano'
-    path_to_kern = '../GT'
+    #path_to_audios = '../piano'
+    #path_to_kern = '../GT'
 
     # Model
     #filters = [16, 16]

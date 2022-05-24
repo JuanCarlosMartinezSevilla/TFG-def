@@ -1,3 +1,4 @@
+from tabnanny import verbose
 import utils as U
 from config import Config
 import numpy as np
@@ -15,9 +16,7 @@ class ModelEvaluator:
         for idx in range(len(self.X)):
 
             sample_image = U.calculate_STFT_array_from_src(self.X[idx])
-            #sample_image = cv2.cvtColor(sample_image, cv2.COLOR_BGR2GRAY)
             sample_image = U.normalize(sample_image)
-            #sample_image = U.resize(sample_image, Config.img_height)
             sample_image = np.expand_dims(np.array(sample_image), -1)
 
             batch_sample = np.zeros(
@@ -25,7 +24,7 @@ class ModelEvaluator:
                 dtype=np.float32)
 
             batch_sample[0] = sample_image
-            prediction = model.predict(batch_sample)[0]
+            prediction = model.predict(batch_sample, verbose=0)[0]
 
             h = U.greedy_decoding(prediction, i2w)
 

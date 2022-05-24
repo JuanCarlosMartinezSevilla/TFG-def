@@ -41,11 +41,11 @@ def main(args):
             print(f"\tSER improved from {best_ser_val} to {ser_val} --> Saving model.")
             best_ser_val = ser_val
             model_pr.save("model_weights.h5")
-        data.append([super_epoch, ser_val, ser_test])
-        print(data)
+        data.append(f'{best_ser_val} {ser_val} {ser_test} \n')
+
     with open('results.txt', 'w') as f:
         for elem in data:
-            f.write(elem + '\n')
+            f.write(elem)
     print("Final")
 
 def build_argument_parser():

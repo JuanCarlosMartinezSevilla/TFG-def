@@ -4,9 +4,6 @@ from config import Config
 import os
 import joblib
 import librosa
-from tqdm import tqdm
-import cv2
-import matplotlib.pyplot as plt
 
 
 def normalize(image):
@@ -17,9 +14,7 @@ def greedy_decoding(prediction, i2w):
     out_best = [k for k, g in itertools.groupby(list(out_best))]
     return [i2w[s] for s in out_best if s != len(i2w)]
 
-
 def levenshtein(a,b):
-    "Computes the Levenshtein distance between a and b."
     n, m = len(a), len(b)
 
     if n > m:
@@ -37,7 +32,6 @@ def levenshtein(a,b):
             current[j] = min(add, delete, change)
 
     return current[n]
-
 
 memory = joblib.memory.Memory('./dataset', mmap_mode='r', verbose=0)
 @memory.cache
@@ -95,7 +89,7 @@ def parse_lst(lst_path):
     vocabulary = set()
 
     lines = open(lst_path, 'r').read().splitlines()
-    for line in tqdm(lines):
+    for line in lines:
         line_aud = line + '.wav'
         line_kern = line + '.skm'
         audio = os.path.join(Config.path_to_audios, line_aud)
@@ -115,6 +109,6 @@ def parse_lst(lst_path):
     w2i = {symbol: idx for idx, symbol in enumerate(vocabulary)}
     i2w = {idx: symbol for idx, symbol in enumerate(vocabulary)}
 
-    print("{} samples loaded with {}-sized vocabulary".format(len(X), len(w2i)))
+    print(f"{len(X)} samples loaded with {len(w2i)}-sized vocabulary")
     return X, Y, w2i, i2w
 

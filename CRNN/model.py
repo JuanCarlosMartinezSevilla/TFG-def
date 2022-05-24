@@ -65,7 +65,7 @@ def build_model(vocabulary_size):
                               outputs=loss_out)
 
     model_tr.compile(loss={'ctc': lambda y_true, y_pred: y_pred}, optimizer='adam')
-    model_tr.summary()
+    #model_tr.summary()
 
     return model_tr, model_pr
 
