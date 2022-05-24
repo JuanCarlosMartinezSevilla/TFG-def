@@ -32,13 +32,11 @@ def build_model(vocabulary_size):
             padding = 'same',
             name = 'MaxPool' + str(conv_index + 1)
         )(x)
-    
-    print("Hola")
 
+    ### Reshaping block ###
     x = tf.keras.layers.Permute((2, 1, 3))(x)
-    x = tf.keras.layers.Reshape(
-        target_shape=(-1, (Config.img_height // (2 ** len(Config.pool_size))) * Config.filters[-1]),
-        name='reshape')(x)
+    x_shape = x.shape
+    x = tf.keras.layers.Reshape(target_shape=(-1, (x_shape[3]*x_shape[2])), name='Reshape')(x)
 
     ### Recurrent block ###
     for rec_index in range(len(Config.units)):

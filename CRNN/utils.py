@@ -53,13 +53,14 @@ def calculate_STFT_array_from_src (file_path: str) -> np.array:
     log_stft = np.log(np.abs(stft_complex) + eps)
     log_stft = np.flipud(log_stft)
 
-    print(log_stft, log_stft.shape)
-
     return log_stft
 
 memory = joblib.memory.Memory('./dataset', mmap_mode='r', verbose=0)
 @memory.cache
 def krn_tokenizer(f_path):
+
+    include_key = False
+    include_measure = False
 
     f = open(f_path, "r")
     
@@ -67,6 +68,10 @@ def krn_tokenizer(f_path):
     symbols = ['J', 'L', '[', ']', '_', ';', 'y', 'q', '\n', 'n']
     for l in f:
         if '*' in l:
+            if 'k[' in l and include_key:
+                tokens.append(l[:-1])
+            if 'M' in l and include_measure:
+                tokens.append(l[:-1])
             continue   
         if '!' in l:
             continue  
@@ -81,7 +86,6 @@ def krn_tokenizer(f_path):
             if s in l:
                 l = l.replace(s, '')
         tokens.append(l)
-    print(tokens)
     return tokens
 
 def parse_lst(lst_path):

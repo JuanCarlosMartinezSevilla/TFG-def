@@ -25,24 +25,24 @@ def main(args):
     data = []
 
     for super_epoch in range(Config.epochs):
-        print("Epoch {}".format(super_epoch))
+        print(f"Epoch {super_epoch}")
         model_tr.fit(dg,
                      steps_per_epoch=len(dg.X)//Config.batch_size,
                      #steps_per_epoch=100,
                      epochs=1,
                      verbose=0)
 
-        print("\tEvaluating...")
+        print(f"\tEvaluating...\tBest SER val: {best_ser_val:.2f}")
         ser_val = evaluator_val.eval(model_pr, dg.i2w)
         ser_test = evaluator_test.eval(model_pr, dg.i2w)
-        print("\tEpoch {}\t{:.2f}\t{:.2f}".format(super_epoch, ser_val, ser_test))
+        print(f"\tEpoch {super_epoch}\t\tSER_val: {ser_val:.2f}\tSER_test: {ser_test:.2f}\n")
 
         if ser_val < best_ser_val:
-            print("\tSER improved from {} to {} --> Saving model.".format(best_ser_val, ser_val))
+            print(f"\tSER improved from {best_ser_val} to {ser_val} --> Saving model.")
             best_ser_val = ser_val
-            model_pr.save_weights("model_weights.h5")
-        data.append([super_epoch, ser_val])
-    print(data)
+            model_pr.save("model_weights.h5")
+        data.append([super_epoch, ser_val, ser_test])
+        print(data)
     with open('results.txt', 'w') as f:
         for elem in data:
             f.write(elem + '\n')

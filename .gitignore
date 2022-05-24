@@ -4,3 +4,6 @@
 /dataset
 .venv/
 .CRNN/idea/
+GT/
+piano/
+TFG/
