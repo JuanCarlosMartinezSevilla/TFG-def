@@ -12,7 +12,7 @@ def main(args):
                        num_channels=Config.num_channels,
                        width_reduction=Config.width_reduction)
 
-    model_tr, model_pr = build_model(vocabulary_size=len(dg.w2i))
+    model_tr, model_pr = build_model(len(dg.w2i))
 
     X_val, Y_val, _, _ = U.parse_lst(args.validation)
     evaluator_val = ModelEvaluator([X_val, Y_val])
