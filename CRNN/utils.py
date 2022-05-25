@@ -97,6 +97,9 @@ def parse_lst(lst_path):
 
         spectrogram = calculate_STFT_array_from_src(audio)
         tokens = krn_tokenizer(kern)
+        
+        if spectrogram.shape[1] > 3000:
+            continue
 
         #print('Forma:' ,spectrogram.shape)
 

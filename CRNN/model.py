@@ -77,8 +77,8 @@ from tensorflow.keras import layers
 from config import Config
 
 def ctc_loss_lambda(args):
-    y_true, y_pred, input_length, label_length = args
-    return keras.backend.ctc_batch_cost(y_true, y_pred, input_length, label_length)
+    y_pred, label, input_length, label_length = args
+    return keras.backend.ctc_batch_cost(label, y_pred, input_length, label_length)
 
 def build_model(num_labels: int):
     image = keras.Input(shape=(Config.img_height, None, Config.num_channels), dtype="float32", name="image")
@@ -121,15 +121,14 @@ def build_model(num_labels: int):
     output = layers.Dense(num_labels + 1, activation="softmax", name='Dense')(x)
 
     # CTC-loss computation
-    # Keras does not currently support loss functions with extra parameters, so CTC loss is implemented in a Lambda layer
     ctc_loss = layers.Lambda(
         function=ctc_loss_lambda,
         output_shape=(1,),
         name="ctc_loss" 
-    )([label, output, image_len, label_len])
+    )([output, label, image_len, label_len])
 
     # Create training model and predicition model
-    model = keras.Model([image, image_len, label, label_len], ctc_loss)
+    model = keras.Model([image, label, image_len, label_len], ctc_loss)
     # The loss calculation is already done, so use a dummy lambda function for the loss
     model.compile(
         optimizer=keras.optimizers.Adam(),
@@ -138,5 +137,5 @@ def build_model(num_labels: int):
 
     # At inference time, we only have the image as input and the softmax prediction as output
     prediction_model = keras.Model(model.get_layer("image").input, output)
-
+    model.summary()
     return model, prediction_model

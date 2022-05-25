@@ -39,7 +39,9 @@ class DataGenerator:
 
         for i, sample in enumerate(X_batch):
             X_train[i, 0:sample.shape[0], 0:sample.shape[1]] = sample
+            #print(sample.shape[1])
             L_train[i] = sample.shape[1] // self.width_reduction  # width_reduction from CRNN
+            #print(L_train[i])
 
         # Y_train, T_train
         max_length_seq = max([len(w) for w in Y_batch])
@@ -50,8 +52,10 @@ class DataGenerator:
             Y_train[i, 0:len(seq)] = seq
             T_train[i] = len(seq)
 
-        #print(X_train.shape, Y_train.shape, L_train.shape, T_train.shape)
+        #for index in range(Config.batch_size):
+        #    print(X_train[index].shape, Y_train[index], L_train[index], T_train[index])
 
+        #print("===========================================")
         return [X_train, Y_train, L_train, T_train], np.zeros((X_train.shape[0], 1), dtype='float16')
 
 
