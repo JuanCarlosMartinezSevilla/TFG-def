@@ -89,7 +89,7 @@ def parse_lst(lst_path):
     vocabulary = set()
 
     lines = open(lst_path, 'r').read().splitlines()
-    for line in tqdm(lines):
+    for line in lines:
         line_aud = line + '.wav'
         line_kern = line + '.skm'
         audio = os.path.join(Config.path_to_audios, line_aud)
