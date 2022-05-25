@@ -4,7 +4,7 @@ from config import Config
 import os
 import joblib
 import librosa
-
+from tqdm import tqdm
 
 def normalize(image):
     return (255. - image) / 255.
@@ -89,7 +89,7 @@ def parse_lst(lst_path):
     vocabulary = set()
 
     lines = open(lst_path, 'r').read().splitlines()
-    for line in lines:
+    for line in tqdm(lines):
         line_aud = line + '.wav'
         line_kern = line + '.skm'
         audio = os.path.join(Config.path_to_audios, line_aud)

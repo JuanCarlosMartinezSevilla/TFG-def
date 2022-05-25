@@ -30,7 +30,7 @@ def main(args):
                      steps_per_epoch=len(dg.X)//Config.batch_size,
                      #steps_per_epoch=100,
                      epochs=1,
-                     verbose=0)
+                     verbose=1)
 
         print(f"\tEvaluating...\tBest SER val: {best_ser_val:.2f}")
         ser_val = evaluator_val.eval(model_pr, dg.i2w)

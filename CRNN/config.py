@@ -4,7 +4,7 @@ class Config:
     num_channels = 1
     width_reduction = 4
     epochs = 200
-    batch_size = 8
+    batch_size = 2
     path_to_audios = '/workspace/CRNN/TFG/Synthesis_procedures/piano'
     path_to_kern = '/workspace/CRNN/TFG/GT'
 
