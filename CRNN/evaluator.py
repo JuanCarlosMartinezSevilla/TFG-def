@@ -16,7 +16,7 @@ class ModelEvaluator:
         for idx in range(len(self.X)):
 
             sample_image = U.calculate_STFT_array_from_src(self.X[idx])
-            sample_image = U.normalize(sample_image)
+            #sample_image = U.normalize(sample_image)
             sample_image = np.expand_dims(np.array(sample_image), -1)
 
             batch_sample = np.zeros(

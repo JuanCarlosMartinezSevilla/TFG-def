@@ -24,7 +24,7 @@ class DataGenerator:
           
 
             sample_image = U.calculate_STFT_array_from_src(self.X[self.idx])
-            sample_image = U.normalize(sample_image)
+            #sample_image = U.normalize(sample_image)
             max_image_width = max(max_image_width, sample_image.shape[1])
             
             sample_image = np.expand_dims(np.array(sample_image), -1)
