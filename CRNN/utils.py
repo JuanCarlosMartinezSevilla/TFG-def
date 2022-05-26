@@ -4,10 +4,11 @@ import itertools
 from config import Config
 import os
 import joblib
-import librosa
-import librosa.display
-from tqdm import tqdm
-import matplotlib.pyplot as plt
+#import librosa
+#import librosa.display
+#from tqdm import tqdm
+#import matplotlib.pyplot as plt
+import madmom
 from madmom.audio.spectrogram import LogarithmicFilterbank, LogarithmicFilteredSpectrogram, Spectrogram
 
 
@@ -61,7 +62,7 @@ def levenshtein(a,b):
 #
 #    return log_stft
 
-memory = joblib.memory.Memory('./dataset/new_stft', mmap_mode='r', verbose=0)
+memory = joblib.memory.Memory('./dataset/new_stft', mmap_mode='r', verbose=1)
 @memory.cache
 def calculate_STFT_array_from_src(audiofilename):
     audio_options = dict(
@@ -131,19 +132,16 @@ def parse_lst(lst_path):
     for line in lines:
         line_aud = line + '.wav'
         line_kern = line + '.skm'
-        line_img = line + '.jpeg'
+        #line_img = line + '.jpeg'
         audio = os.path.join(Config.path_to_audios, line_aud)
         kern = os.path.join(Config.path_to_kern, line_kern)
-        img = os.path.join(Config.path_to_img, line_img)
+        #img = os.path.join(Config.path_to_img, line_img)
 
-        print(img)
-        spectrogram = calculate_STFT_array_from_src(audio, img)
+        #print(img)
+        spectrogram = calculate_STFT_array_from_src(audio)
         tokens = krn_tokenizer(kern)
         
-        if spectrogram.shape[1] > 3000:
-            continue
-
-        #print('Forma:' ,spectrogram.shape)
+        #print('Forma:' ,np.amax(np.array(spectrogram)), np.amin(np.array(spectrogram)))
 
         for t in tokens:
             vocabulary.add(t)

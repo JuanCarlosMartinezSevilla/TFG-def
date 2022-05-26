@@ -52,10 +52,11 @@ class DataGenerator:
             Y_train[i, 0:len(seq)] = seq
             T_train[i] = len(seq)
 
-        #for index in range(Config.batch_size):
-        #    print(X_train[index].shape, Y_train[index], L_train[index], T_train[index])
+        print()
+        for index in range(Config.batch_size):
 
-        #print("===========================================")
+            print(X_train[index].shape, Y_train[index].shape, L_train[index].shape, T_train[index].shape)
+        print("===========================================")
         return [X_train, Y_train, L_train, T_train], np.zeros((X_train.shape[0], 1), dtype='float16')
 
 

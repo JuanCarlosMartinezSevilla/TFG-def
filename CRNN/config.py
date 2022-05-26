@@ -1,6 +1,6 @@
 
 class Config:
-    img_height = 257
+    img_height = 229
     num_channels = 1
     width_reduction = 4
     epochs = 200

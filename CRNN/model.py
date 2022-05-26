@@ -124,7 +124,7 @@ def build_model(num_labels: int):
     ctc_loss = layers.Lambda(
         function=ctc_loss_lambda,
         output_shape=(1,),
-        name="ctc_loss" 
+        name="ctc_loss"
     )([output, label, image_len, label_len])
 
     # Create training model and predicition model
