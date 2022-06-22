@@ -26,7 +26,7 @@ class DataGenerator:
             stft, h, w = U.calculate_STFT_array_from_src(self.X[self.idx])
             sample_image = U.from_spec_create_image(self.X[self.idx], stft, h, w)
             #sample_image = U.resize(sample_image)
-            print(sample_image.shape)
+            #print(sample_image.shape)
 
             #sample_image = U.normalize(sample_image)
             max_image_width = max(max_image_width, sample_image.shape[1])
