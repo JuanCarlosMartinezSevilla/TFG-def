@@ -68,13 +68,14 @@ def from_spec_create_image(file_path, stft, h, w):
     # Saves the image
     fig.savefig(f'{path_to_save_temp_img}.png', bbox_inches='tight', pad_inches=0)
     
-    # Reads image and deletes it
+    # Reads image, changes color, resizes it and deletes it
     img = cv2.imread(f'{path_to_save_temp_img}.png')
     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    os.remove(f'{path_to_save_temp_img}.png')
-
     img = normalize(img)
-
+    new_height = Config.img_height
+    new_width = int(new_height * img.shape[1] / img.shape[0])
+    img = cv2.resize(img, (new_width, new_height), interpolation=cv2.INTER_AREA)
+    os.remove(f'{path_to_save_temp_img}.png')
     plt.close()
 
     return img
