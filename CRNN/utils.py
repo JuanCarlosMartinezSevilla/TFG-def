@@ -186,6 +186,7 @@ def parse_lst(lst_path):
     vocabulary = set()
 
     lines = open(lst_path, 'r').read().splitlines()
+    max_w = 0
     for line in lines:
         line_aud = line + '.wav'
         line_kern = line + '.skm'
@@ -196,6 +197,12 @@ def parse_lst(lst_path):
 
         #print(img)
         spectrogram = calculate_STFT_array_from_src(audio)
+
+        _, w = spectrogram.shape
+        if w > max_w:
+            max_w = w
+            print(max_w)
+
         tokens = krn_tokenizer(kern)
         
         #print('Forma:' ,np.amax(np.array(spectrogram)), np.amin(np.array(spectrogram)))
