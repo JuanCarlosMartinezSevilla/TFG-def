@@ -11,6 +11,14 @@ import cv2 as cv2
 import madmom
 from madmom.audio.spectrogram import LogarithmicFilterbank, LogarithmicFilteredSpectrogram, Spectrogram
 
+def resize(img):
+    audio_shape = img.shape
+    h = audio_shape[0]
+    w = audio_shape[1]
+    
+    if h != 229:
+        img = cv2.resize(img, (229, w), interpolation=cv2.INTER_AREA)
+    return img
 
 def normalize(image):
     return (255. - image) / 255.
