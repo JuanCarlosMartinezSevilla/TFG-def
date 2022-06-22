@@ -66,6 +66,8 @@ def from_spec_create_image(file_path, stft, h, w):
 
     img = normalize(img)
 
+    plt.close()
+
     return img
 
 memory = joblib.memory.Memory('./dataset', mmap_mode='r', verbose=1)
