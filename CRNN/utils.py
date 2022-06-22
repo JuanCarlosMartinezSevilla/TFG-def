@@ -11,6 +11,7 @@ import cv2 as cv2
 import madmom
 from madmom.audio.spectrogram import LogarithmicFilterbank, LogarithmicFilteredSpectrogram, Spectrogram
 
+#comment
 def resize(img):
     audio_shape = img.shape
     h = audio_shape[0]
