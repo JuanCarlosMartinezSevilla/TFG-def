@@ -8,8 +8,8 @@ import librosa.display
 #from tqdm import tqdm
 import matplotlib.pyplot as plt
 import cv2 as cv2
-#import madmom
-#from madmom.audio.spectrogram import LogarithmicFilterbank, LogarithmicFilteredSpectrogram, Spectrogram
+import madmom
+from madmom.audio.spectrogram import LogarithmicFilterbank, LogarithmicFilteredSpectrogram, Spectrogram
 
 
 def normalize(image):
@@ -58,16 +58,19 @@ def from_spec_create_image(file_path, stft, h, w):
     
     # Saves the image
     fig.savefig(f'{path_to_save_temp_img}.png', bbox_inches='tight', pad_inches=0)
+    
+    # Reads image and deletes it
     img = cv2.imread(f'{path_to_save_temp_img}.png')
     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
     os.remove(f'{path_to_save_temp_img}.png')
+
+    img = normalize(img)
 
     return img
 
 memory = joblib.memory.Memory('./dataset', mmap_mode='r', verbose=0)
 @memory.cache
-def calculate_STFT_array_from_src (file_path: str, saving_path) -> np.array:
+def calculate_STFT_array_from_src (file_path: str):
     n_fft = 512
     hop_length = n_fft // 4
     eps = 0.001
@@ -76,15 +79,31 @@ def calculate_STFT_array_from_src (file_path: str, saving_path) -> np.array:
     
     audio, _ = librosa.load(file_path, sr=SR, mono=True)
     stft_complex = librosa.stft(y=audio, n_fft=n_fft, hop_length=hop_length)
-    stft = np.abs(stft_complex)
-    #log_stft = np.log(np.abs(stft_complex) + eps)
-    #log_stft = np.flipud(log_stft)
-
     audio_shape = stft_complex.shape
     h = audio_shape[0]
     w = audio_shape[1]
 
-    
+    audio_options = dict(
+            num_channels=1,
+            sample_rate=44100,
+            filterbank=LogarithmicFilterbank,
+            frame_size=4096,
+            fft_size=4096,
+            hop_size=441 * 2,  # 25 fps -> 441 * 4 ; 50 fps -> 441 * 2
+            num_bands=48,
+            fmin=30,
+            fmax=8000.0,
+            fref=440.0,
+            norm_filters=True,
+            unique_filters=True,
+            circular_shift=False,
+            norm=True
+    )
+
+    dt = float(audio_options['hop_size']) / float(audio_options['sample_rate'])
+    x = LogarithmicFilteredSpectrogram(file_path, **audio_options)
+    x = np.flip(np.transpose(x),0)
+    stft = (x - np.amin(x)) / (np.amax(x) - np.amin(x))
 
     return stft, h, w
 

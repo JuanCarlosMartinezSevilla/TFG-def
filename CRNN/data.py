@@ -23,7 +23,8 @@ class DataGenerator:
         for _ in range(self.batch_size):
           
 
-            sample_image = U.calculate_STFT_array_from_src(self.X[self.idx])
+            stft, h, w = U.calculate_STFT_array_from_src(self.X[self.idx])
+            sample_image = U.from_spec_create_image(self.X[self.idx], stft, h, w)
             #sample_image = U.normalize(sample_image)
             max_image_width = max(max_image_width, sample_image.shape[1])
             
