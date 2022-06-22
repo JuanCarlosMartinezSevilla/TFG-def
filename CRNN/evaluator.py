@@ -17,7 +17,8 @@ class ModelEvaluator:
 
             stft, h, w = U.calculate_STFT_array_from_src(self.X[idx])
             sample_image = U.from_spec_create_image(self.X[idx], stft, h, w)
-            sample_image = U.resize(sample_image)
+            #sample_image = U.resize(sample_image)
+            print(sample_image.shape)
             #sample_image = U.normalize(sample_image)
             sample_image = np.expand_dims(np.array(sample_image), -1)
 
