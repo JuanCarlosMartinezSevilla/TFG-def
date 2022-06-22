@@ -7,6 +7,7 @@ class Config:
     batch_size = 4
     path_to_audios = '/workspace/CRNN/TFG/Synthesis_procedures/piano'
     path_to_kern = '/workspace/CRNN/TFG/GT'
+    path_to_temp = '/workspace/CRNN/temp'
 
     # LOCAL training
     #path_to_audios = '../piano'

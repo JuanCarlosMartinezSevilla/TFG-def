@@ -1,15 +1,15 @@
-import matplotlib
 import numpy as np
 import itertools
 from config import Config
 import os
 import joblib
-#import librosa
-#import librosa.display
+import librosa
+import librosa.display
 #from tqdm import tqdm
-#import matplotlib.pyplot as plt
-import madmom
-from madmom.audio.spectrogram import LogarithmicFilterbank, LogarithmicFilteredSpectrogram, Spectrogram
+import matplotlib.pyplot as plt
+import cv2 as cv2
+#import madmom
+#from madmom.audio.spectrogram import LogarithmicFilterbank, LogarithmicFilteredSpectrogram, Spectrogram
 
 
 def normalize(image):
@@ -39,55 +39,81 @@ def levenshtein(a,b):
 
     return current[n]
 
-#memory = joblib.memory.Memory('./dataset', mmap_mode='r', verbose=0)
-#@memory.cache
-#def calculate_STFT_array_from_src (file_path: str, saving_path) -> np.array:
-#    n_fft = 512
-#    hop_length = n_fft // 4
-#    eps = 0.001
-#
-#    SR = 22050	# sample rate of audio
-#    
-#    audio, _ = librosa.load(file_path, sr=SR, mono=True)
-#    stft_complex = librosa.stft(y=audio, n_fft=n_fft, hop_length=hop_length)
-#    log_stft = np.log(np.abs(stft_complex) + eps)
-#    log_stft = np.flipud(log_stft)
-#
-#    plt.clf()
-#    plt.cla()
-#    plt.close()
-#    plt.axis('off')
-#    img = librosa.display.specshow(librosa.amplitude_to_db(log_stft), sr=SR, x_axis='s', y_axis='linear', hop_length=hop_length)
-#    img.figure.savefig(saving_path, bbox_inches='tight', pad_inches=0)
-#
-#    return log_stft
+def from_spec_create_image(file_path, stft, h, w):
 
-memory = joblib.memory.Memory('./dataset/new_stft', mmap_mode='r', verbose=1)
+    if not os.path.exists(Config.path_to_temp):
+        os.makedirs(Config.path_to_temp)
+
+    SR = 22050
+    n_fft = 512
+    hop_length = n_fft // 4
+
+    plt.clf()
+    plt.cla()
+    
+    fig = plt.figure(figsize=(w/100, h/100))
+    plt.axis('off')
+    img = librosa.display.specshow(librosa.amplitude_to_db(stft), sr=SR, x_axis='s', y_axis='linear', hop_length=hop_length)
+    path_to_save_temp_img = os.path.join(Config.path_to_temp, file_path)
+    
+    # Saves the image
+    fig.savefig(f'{path_to_save_temp_img}.png', bbox_inches='tight', pad_inches=0)
+    img = cv2.imread(f'{path_to_save_temp_img}.png')
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    os.remove(f'{path_to_save_temp_img}.png')
+
+    return img
+
+memory = joblib.memory.Memory('./dataset', mmap_mode='r', verbose=0)
 @memory.cache
-def calculate_STFT_array_from_src(audiofilename):
-    audio_options = dict(
-            num_channels=1,
-            sample_rate=44100,
-            filterbank=LogarithmicFilterbank,
-            frame_size=4096,
-            fft_size=4096,
-            hop_size=441 * 2,  # 25 fps -> 441 * 4 ; 50 fps -> 441 * 2
-            num_bands=48,
-            fmin=30,
-            fmax=8000.0,
-            fref=440.0,
-            norm_filters=True,
-            unique_filters=True,
-            circular_shift=False,
-            norm=True
-    )
+def calculate_STFT_array_from_src (file_path: str, saving_path) -> np.array:
+    n_fft = 512
+    hop_length = n_fft // 4
+    eps = 0.001
 
-    dt = float(audio_options['hop_size']) / float(audio_options['sample_rate'])
-    x = LogarithmicFilteredSpectrogram(audiofilename, **audio_options)
-    x = np.flip(np.transpose(x),0)
-    x = (x - np.amin(x)) / (np.amax(x) - np.amin(x))
+    SR = 22050	# sample rate of audio
+    
+    audio, _ = librosa.load(file_path, sr=SR, mono=True)
+    stft_complex = librosa.stft(y=audio, n_fft=n_fft, hop_length=hop_length)
+    stft = np.abs(stft_complex)
+    #log_stft = np.log(np.abs(stft_complex) + eps)
+    #log_stft = np.flipud(log_stft)
 
-    return x
+    audio_shape = stft_complex.shape
+    h = audio_shape[0]
+    w = audio_shape[1]
+
+    
+
+    return stft, h, w
+
+#memory = joblib.memory.Memory('./dataset/new_stft', mmap_mode='r', verbose=1)
+#@memory.cache
+#def calculate_STFT_array_from_src(audiofilename):
+#    audio_options = dict(
+#            num_channels=1,
+#            sample_rate=44100,
+#            filterbank=LogarithmicFilterbank,
+#            frame_size=4096,
+#            fft_size=4096,
+#            hop_size=441 * 2,  # 25 fps -> 441 * 4 ; 50 fps -> 441 * 2
+#            num_bands=48,
+#            fmin=30,
+#            fmax=8000.0,
+#            fref=440.0,
+#            norm_filters=True,
+#            unique_filters=True,
+#            circular_shift=False,
+#            norm=True
+#    )
+#
+#    dt = float(audio_options['hop_size']) / float(audio_options['sample_rate'])
+#    x = LogarithmicFilteredSpectrogram(audiofilename, **audio_options)
+#    x = np.flip(np.transpose(x),0)
+#    x = (x - np.amin(x)) / (np.amax(x) - np.amin(x))
+#
+#    return x
 
 memory = joblib.memory.Memory('./dataset', mmap_mode='r', verbose=0)
 @memory.cache
