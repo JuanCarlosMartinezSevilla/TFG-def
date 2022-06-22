@@ -198,7 +198,7 @@ def parse_lst(lst_path):
         #print(img)
         spectrogram = calculate_STFT_array_from_src(audio)
 
-        _, w = spectrogram.shape
+        w = spectrogram.shape[2]
         if w > max_w:
             max_w = w
             print(max_w)
