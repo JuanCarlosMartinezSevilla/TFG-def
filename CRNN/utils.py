@@ -68,7 +68,7 @@ def from_spec_create_image(file_path, stft, h, w):
 
     return img
 
-memory = joblib.memory.Memory('./dataset', mmap_mode='r', verbose=0)
+memory = joblib.memory.Memory('./dataset', mmap_mode='r', verbose=1)
 @memory.cache
 def calculate_STFT_array_from_src (file_path: str):
     n_fft = 512
